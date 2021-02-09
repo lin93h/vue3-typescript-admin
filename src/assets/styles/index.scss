@@ -1,3 +1,5 @@
+@import './atom.scss';
+
 html {
   height: 100%;
   box-sizing: border-box;
@@ -39,39 +41,6 @@ a:hover {
 
 div:focus {
   outline: none;
-}
-
-.pr-5 {
-  padding-right: 5px;
-}
-
-.pl-5 {
-  padding-left: 5px;
-}
-
-.block {
-  display: block;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.clearfix {
-  &:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-  }
-}
-
-.flex-row {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
 }
 
 ::-webkit-scrollbar {
