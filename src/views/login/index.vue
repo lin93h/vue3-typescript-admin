@@ -57,7 +57,7 @@ export default defineComponent({
   methods: {
     handleLogin() {
       this.onLogin()
-      if(this.flag) {
+      if (this.flag) {
         this.$router.push('/home')
       }
     }
