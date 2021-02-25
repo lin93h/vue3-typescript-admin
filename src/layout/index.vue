@@ -1,8 +1,8 @@
 <template>
   <div class="layout-wrapper flex-row">
     <sidebar></sidebar>
-    <div class="main-container">
-      <div class="fixed-header">
+    <div class="main-container flex-column">
+      <div class="fixed-header flex-column">
         <nav-bar></nav-bar>
         <tags-view></tags-view>
       </div>
@@ -34,6 +34,7 @@ export default {
   height: 100%;
   .main-container {
     flex-grow: 1;
+    overflow: hidden;
   }
 }
 </style>
