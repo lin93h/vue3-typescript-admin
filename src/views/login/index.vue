@@ -26,20 +26,19 @@ interface LoginForm {
 export default defineComponent({
   name: 'Login',
   setup() {
-    const loginFormRef = ref(ElForm)
-    const flag = ref(false)
-    const onLogin = () => {
-      loginFormRef.value.validate((valid: boolean) => {
-        if (valid) {
-          flag.value = true
+    const loginFormRef = ref<InstanceType<typeof ElForm>>()
+    // const loginFormRef = (el: InstanceType<typeof ElForm>) => {
+    //   formRef.value = el
+    // }
+    const handleLogin = () => {
+      loginFormRef.value?.validate((valid): void => {
+        if(valid) {
         }
       })
     }
-
     return {
       loginFormRef,
-      flag,
-      onLogin
+      handleLogin
     }
   },
   data() {
@@ -55,22 +54,24 @@ export default defineComponent({
     }
   },
   methods: {
-    handleLogin() {
-      this.onLogin()
-      if (this.flag) {
-        this.$router.push('/')
-      }
-    }
+    // handleLogin() {
+    //   (this.$refs.loginFormRef as typeof ElForm).validate((valid: boolean) => {
+    //     console.log('111111', valid)
+    //     if(valid) {}
+    //   })
+    //   // this.onLogin()
+    //   // if (this.flag) {
+    //   //   this.$router.push('/')
+    //   // }
+    // }
   }
 })
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/variables.scss';
-
 .login-wrapper {
   height: 100%;
-  background: $blue;
+  background: #002766;
   overflow: hidden;
   .login-box {
     background: #fff;
