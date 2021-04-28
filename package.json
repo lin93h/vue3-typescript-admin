@@ -51,6 +51,7 @@
     },
     "rules": {
       "space-before-function-paren": "off",
+      "dot-notation": "off",
       "no-unused-expressions": "off",
       "keyword-spacing": "off",
       "eol-last": "off",

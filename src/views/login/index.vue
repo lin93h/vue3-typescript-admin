@@ -4,20 +4,22 @@
       <div class="box-title">vue3-TS-ElementPlus后台管理系统</div>
       <el-form class="login-form" ref="loginFormRef" :model="loginForm" :rules="loginRules">
         <el-form-item label="账号" prop="account">
-          <el-input v-model="loginForm.account" clearable></el-input>
+          <el-input v-model="loginForm.account" clearable> </el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="loginForm.password" show-password></el-input>
+          <el-input v-model="loginForm.password" show-password> </el-input>
         </el-form-item>
       </el-form>
-      <el-button class="login-btn" type="primary" @click="handleLogin">登录</el-button>
+      <el-button class="login-btn" type="primary" @click="handleLogin">
+        登录
+      </el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ElForm } from 'element-plus'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
 interface LoginForm {
   account: string
   password: string
@@ -27,43 +29,29 @@ export default defineComponent({
   name: 'Login',
   setup() {
     const loginFormRef = ref<InstanceType<typeof ElForm>>()
-    // const loginFormRef = (el: InstanceType<typeof ElForm>) => {
-    //   formRef.value = el
-    // }
+    const loginForm = reactive<LoginForm>({
+      account: '',
+      password: ''
+    })
+    const loginRules = reactive({
+      account: [{ required: true, message: '请输入', trigger: 'blur' }],
+      passowrd: [{ required: true, message: '请输入', trigger: 'blur' }]
+    })
     const handleLogin = () => {
-      loginFormRef.value?.validate((valid): void => {
-        if(valid) {
+      loginFormRef.value?.validate((valid) => {
+        if (valid) {
         }
       })
     }
     return {
       loginFormRef,
+      loginRules,
+      loginForm,
       handleLogin
     }
   },
   data() {
-    return {
-      loginForm: {
-        account: '',
-        password: ''
-      } as LoginForm,
-      loginRules: {
-        account: [{ required: true, message: '请输入', trigger: 'blur' }],
-        passowrd: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-    }
-  },
-  methods: {
-    // handleLogin() {
-    //   (this.$refs.loginFormRef as typeof ElForm).validate((valid: boolean) => {
-    //     console.log('111111', valid)
-    //     if(valid) {}
-    //   })
-    //   // this.onLogin()
-    //   // if (this.flag) {
-    //   //   this.$router.push('/')
-    //   // }
-    // }
+    return {}
   }
 })
 </script>
