@@ -33,10 +33,22 @@ export default defineComponent({
       account: '',
       password: ''
     })
+
+    const checkAccount = (rule: any, value: string, callback: Function) => {
+      if (!value) {
+        callback(new Error('不可少于4个字符'))
+      } else {
+        callback()
+      }
+    }
     const loginRules = reactive({
-      account: [{ required: true, message: '请输入', trigger: 'blur' }],
+      account: [
+        { required: true, message: '请输入', trigger: 'blur' },
+        { validator: checkAccount, trigger: 'blur' }
+      ],
       passowrd: [{ required: true, message: '请输入', trigger: 'blur' }]
     })
+
     const handleLogin = () => {
       loginFormRef.value?.validate((valid) => {
         if (valid) {
