@@ -25,6 +25,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
+    "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.31",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
@@ -55,7 +56,9 @@
       "no-unused-expressions": "off",
       "keyword-spacing": "off",
       "eol-last": "off",
-      "@typescript-eslint/member-delimiter-style": ["error", {
+      "@typescript-eslint/member-delimiter-style": [
+        "error",
+        {
           "multiline": {
             "delimiter": "none",
             "requireLast": true
@@ -64,7 +67,8 @@
             "delimiter": "semi",
             "requireLast": false
           }
-      }]
+        }
+      ]
     }
   },
   "browserslist": [

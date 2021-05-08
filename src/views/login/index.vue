@@ -20,21 +20,18 @@
 <script lang="ts">
 import { ElForm } from 'element-plus'
 import { defineComponent, ref, reactive } from 'vue'
-interface LoginForm {
-  account: string
-  password: string
-}
+type ElFormRule = Pick<InstanceType<typeof ElForm>, 'rules'>['rules']
 
 export default defineComponent({
   name: 'Login',
   setup() {
     const loginFormRef = ref<InstanceType<typeof ElForm>>()
-    const loginForm = reactive<LoginForm>({
+    const loginForm = reactive({
       account: '',
       password: ''
     })
 
-    const checkAccount = (rule: any, value: string, callback: Function) => {
+    const checkAccount = (rule: ElFormRule, value: string, callback: Function) => {
       if (!value) {
         callback(new Error('不可少于4个字符'))
       } else {
