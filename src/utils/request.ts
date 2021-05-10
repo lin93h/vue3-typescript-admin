@@ -1,12 +1,22 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NODE_ENV,
+// 服务端接口返回格式
+interface ResponseData {
+  code: number
+  msg: string
+  data?: unknown
+}
+
+type HttpResponse = AxiosResponse<ResponseData>
+
+const instance = axios.create({
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 15000
 })
 
 // 请求拦截器
-instance.interceptors.request.use((config: AxiosRequestConfig) => {
+instance.interceptors.request.use((config) => {
   config.headers['Authorization'] = 'Bearer '
   return config
 }, (error) => {
@@ -14,31 +24,39 @@ instance.interceptors.request.use((config: AxiosRequestConfig) => {
 })
 
 // 响应拦截
-instance.interceptors.response.use((response) => {
-  return response
+instance.interceptors.response.use((response: HttpResponse): HttpResponse => {
+  const { data } = response
+  if (data.code === 305) {
+    ElMessageBox.alert(data.msg, '提示', {
+      type: 'warning',
+      confirmButtonText: '重新登录',
+      showClose: false,
+      callback: () => {
+        location.reload()
+      }
+    })
+  }
+  return data as any
 }, (error) => {
+  ElMessage.error(error.message)
   return Promise.reject(error)
 })
 
-enum HttpMethods {
-  GET = 'get',
-  POST = 'post',
-  PUT = 'put',
-  DELETE = 'delete'
+type HttpMethod = 'get' | 'post' | 'put' | 'delete'
+
+interface HttpArgument {
+  method: HttpMethod
+  url: string
+  data?: Record<string, unknown>
 }
 
-type MethodType = 'get' | 'post' | 'put' | 'delete'
-
-interface HttpArgsType {
-  method: MethodType,
-  url: string,
-  params: Record<string, unknown>
-}
-interface MethodsType {
-  <T = any>(args: HttpArgsType): Promise<T>
+const request = (argument: HttpArgument) => {
+  const { method, url, data } = argument
+  return instance({
+    method,
+    url,
+    data
+  })
 }
 
-const requese: MethodsType = (argument) => {
-  let { method, url, params } = argument
-  return instance[method](url, params)
-}
+export default request
