@@ -16,9 +16,7 @@
           </div>
         </el-form-item>
       </el-form>
-      <el-button class="login-btn" type="primary" @click="handleLogin">
-        登录
-      </el-button>
+      <el-button class="login-btn" type="primary" @click="handleLogin">登录</el-button>
     </div>
   </div>
 </template>
@@ -76,10 +74,10 @@ export default defineComponent({
 
     // 登录
     handleLogin() {
-      const loginFormRef = this.$refs['loginForm'] as InstanceType<typeof ElForm>
+      const loginFormRef = this.$refs['loginFormRef'] as InstanceType<typeof ElForm>
       loginFormRef.validate((valid) => {
         if(valid) {
-          this.$router.push('/home')
+          this.$router.push('/dashboard')
         }
       })
     }
@@ -97,11 +95,20 @@ export default defineComponent({
     background: #fff;
     padding: 50px;
     border-radius: 5px;
+    .box-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .login-form {
+      margin-bottom: 30px;
+    }
     .graphic-code {
       flex-shrink: 0;
       height: 40px;
       width: 84px;
       overflow: hidden;
+      cursor: pointer;
     }
     .login-btn {
       width: 100%;

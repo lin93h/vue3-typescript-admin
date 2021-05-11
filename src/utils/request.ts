@@ -1,14 +1,5 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
-// 服务端接口返回格式
-interface ResponseData {
-  code: number
-  msg: string
-  data?: unknown
-}
-
-type HttpResponse = AxiosResponse<ResponseData>
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -24,7 +15,7 @@ instance.interceptors.request.use((config) => {
 })
 
 // 响应拦截
-instance.interceptors.response.use((response: HttpResponse): HttpResponse => {
+instance.interceptors.response.use((response) => {
   const { data } = response
   if (data.code === 305) {
     ElMessageBox.alert(data.msg, '提示', {
@@ -36,7 +27,7 @@ instance.interceptors.response.use((response: HttpResponse): HttpResponse => {
       }
     })
   }
-  return data as any
+  return data
 }, (error) => {
   ElMessage.error(error.message)
   return Promise.reject(error)
