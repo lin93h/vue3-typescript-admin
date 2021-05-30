@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { ResponseType } from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const instance = axios.create({
@@ -26,8 +26,16 @@ instance.interceptors.response.use((response) => {
         location.reload()
       }
     })
+    return data
+  } else if (data.code === 0) {
+    return data
+  } else {
+    ElMessageBox.alert(data.msg, '提示', {
+      type: 'error',
+      confirmButtonText: '知道了'
+    })
+    return Promise.reject(data)
   }
-  return data
 }, (error) => {
   ElMessage.error(error.message)
   return Promise.reject(error)
@@ -38,15 +46,19 @@ type HttpMethod = 'get' | 'post' | 'put' | 'delete'
 interface HttpArgument {
   method: HttpMethod
   url: string
-  data?: Record<string, unknown>
+  data?: unknown
+  headers?: Record<string, unknown>
+  responseType?: ResponseType
 }
 
 const request = (argument: HttpArgument) => {
-  const { method, url, data } = argument
+  const { method, url, data, headers, responseType } = argument
   return instance({
     method,
     url,
-    data
+    data,
+    headers,
+    responseType
   })
 }
 

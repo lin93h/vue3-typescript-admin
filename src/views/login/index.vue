@@ -3,15 +3,15 @@
     <div class="login-box">
       <div class="box-title">vue3-TS-ElementPlus后台管理系统</div>
       <el-form class="login-form" ref="loginFormRef" :model="loginForm" :rules="loginRules">
-        <el-form-item label="" prop="account">
-          <el-input v-model="loginForm.account" clearable></el-input>
+        <el-form-item label="" prop="username">
+          <el-input v-model="loginForm.username" clearable></el-input>
         </el-form-item>
         <el-form-item label="" prop="password">
           <el-input v-model="loginForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item label="" prop="code">
           <div class="flex-row-center">
-            <el-input v-model="loginForm.code" clearable></el-input>
+            <el-input v-model="loginForm.code" @keyup.enter.stop="handleLogin" clearable></el-input>
             <div class="graphic-code flex-row-center-center" v-html="codeImg"></div>
           </div>
         </el-form-item>
@@ -25,18 +25,18 @@
 import { ElForm } from 'element-plus'
 import { defineComponent } from 'vue'
 import { graphicCode } from '@/api/common'
-
-type ElFormRule = Pick<InstanceType<typeof ElForm>, 'rules'>['rules']
+import { login, getUserInfo } from '@/api/user'
+import { setToken } from '@/utils/cookie'
 
 export default defineComponent({
   name: 'Login',
   data() {
     const checkAccount = (
-      rule: ElFormRule,
+      rule: Record<string, unknown>,
       value: string,
       callback: Function
     ) => {
-      if(!value) {
+      if (!value) {
         callback(new Error('不可少于4个字符'))
       } else {
         callback()
@@ -44,12 +44,12 @@ export default defineComponent({
     }
     return {
       loginForm: {
-        account: '',
+        username: '',
         password: '',
         code: ''
       },
       loginRules: {
-        account: [
+        username: [
           { required: true, message: '请输入', trigger: 'blur' },
           { validator: checkAccount, trigger: 'blur' }
         ],
@@ -76,8 +76,13 @@ export default defineComponent({
     handleLogin() {
       const loginFormRef = this.$refs['loginFormRef'] as InstanceType<typeof ElForm>
       loginFormRef.validate((valid) => {
-        if(valid) {
-          this.$router.push('/dashboard')
+        if (valid) {
+          login(this.loginForm).then((res) => {
+            setToken(res.data.id)
+            getUserInfo().then(() => {
+              this.$router.push('/dashboard')
+            })
+          })
         }
       })
     }
