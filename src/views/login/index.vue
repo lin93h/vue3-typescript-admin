@@ -12,7 +12,7 @@
         <el-form-item label="" prop="code">
           <div class="flex-row-center">
             <el-input v-model="loginForm.code" @keyup.enter.stop="handleLogin" clearable></el-input>
-            <div class="graphic-code flex-row-center-center" v-html="codeImg"></div>
+            <img class="graphic-code flex-row-center-center" :src="codeImg" @click="handleGetCode" />
           </div>
         </el-form-item>
       </el-form>
@@ -24,8 +24,8 @@
 <script lang="ts">
 import { ElForm } from 'element-plus'
 import { defineComponent } from 'vue'
-import { graphicCode } from '@/api/common'
-import { login, getUserInfo } from '@/api/user'
+import { captchaImage } from '@/api/common'
+import { login } from '@/api/user'
 import { setToken } from '@/utils/cookie'
 
 export default defineComponent({
@@ -36,7 +36,7 @@ export default defineComponent({
       value: string,
       callback: Function
     ) => {
-      if (!value) {
+      if(!value) {
         callback(new Error('不可少于4个字符'))
       } else {
         callback()
@@ -46,7 +46,8 @@ export default defineComponent({
       loginForm: {
         username: '',
         password: '',
-        code: ''
+        code: '',
+        uuid: ''
       },
       loginRules: {
         username: [
@@ -65,8 +66,9 @@ export default defineComponent({
   methods: {
     // 获取验证码
     handleGetCode() {
-      graphicCode().then((res) => {
-        this.codeImg = res.data
+      captchaImage().then((res) => {
+        this.codeImg = ('data:image/gif;base64,' + res.img) as string
+        this.loginForm.uuid = res.uuid
       }).catch((error) => {
         console.log(error)
       })
@@ -76,12 +78,12 @@ export default defineComponent({
     handleLogin() {
       const loginFormRef = this.$refs['loginFormRef'] as InstanceType<typeof ElForm>
       loginFormRef.validate((valid) => {
-        if (valid) {
+        if(valid) {
           login(this.loginForm).then((res) => {
-            setToken(res.data.id)
-            getUserInfo().then(() => {
-              this.$router.push('/dashboard')
-            })
+            setToken(res.token)
+            this.$router.push('/dashboard')
+          }).catch(() => {
+            this.handleGetCode()
           })
         }
       })

@@ -1,6 +1,8 @@
-import axios, { ResponseType } from 'axios'
+import axios, { ResponseType, AxiosResponse } from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { getToken } from '@/utils/cookie'
 
+// 初始化拦截器
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 15000
@@ -8,7 +10,9 @@ const instance = axios.create({
 
 // 请求拦截器
 instance.interceptors.request.use((config) => {
-  config.headers['Authorization'] = 'Bearer '
+  if(getToken()) {
+    config.headers['Authorization'] = 'Bearer ' + getToken()
+  }
   return config
 }, (error) => {
   return Promise.reject(error)
@@ -16,8 +20,11 @@ instance.interceptors.request.use((config) => {
 
 // 响应拦截
 instance.interceptors.response.use((response) => {
-  const { data } = response
-  if (data.code === 305) {
+  const { data, request } = response
+  if(request.responseType === 'blob') {
+    return response
+  }
+  if(data.code === 305) {
     ElMessageBox.alert(data.msg, '提示', {
       type: 'warning',
       confirmButtonText: '重新登录',
@@ -27,7 +34,7 @@ instance.interceptors.response.use((response) => {
       }
     })
     return data
-  } else if (data.code === 0) {
+  } else if(data.code === 200) {
     return data
   } else {
     ElMessageBox.alert(data.msg, '提示', {
@@ -41,25 +48,46 @@ instance.interceptors.response.use((response) => {
   return Promise.reject(error)
 })
 
+// 请求方式类型
 type HttpMethod = 'get' | 'post' | 'put' | 'delete'
 
+// 请求参数
 interface HttpArgument {
   method: HttpMethod
   url: string
-  data?: unknown
+  data?: Record<string, unknown>
   headers?: Record<string, unknown>
   responseType?: ResponseType
 }
 
-const request = (argument: HttpArgument) => {
+/**
+ * 返回数据类型
+ * @property code 编码
+ * @property msg 提示文字
+ * @property data 返回数据
+ * @property [propName] 任意其他参数
+ */
+export type ResponseData = {
+  code?: number
+  msg?: string
+  data?: any
+  [propName: string]: any
+}
+
+// 请求函数类型
+interface RequestType {
+  (argument: HttpArgument): Promise<ResponseData>
+}
+const request: RequestType = async (argument: HttpArgument) => {
   const { method, url, data, headers, responseType } = argument
-  return instance({
+  const res: AxiosResponse<ResponseData> = await instance({
     method,
     url,
     data,
     headers,
     responseType
   })
+  return res
 }
 
 export default request

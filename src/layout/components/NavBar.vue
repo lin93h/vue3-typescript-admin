@@ -18,9 +18,7 @@
         <el-avatar class="pointer" shape="square" :src="avatar"></el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item @click="handleOut">退出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -30,10 +28,19 @@
 
 <script>
 import Avatar from '@/assets/logo.png'
+import { logout } from '@/api/user'
+
 export default {
   data() {
     return {
       avatar: Avatar
+    }
+  },
+  methods: {
+    handleOut() {
+      logout().then(() => {
+        console.log('1111111')
+      })
     }
   }
 }

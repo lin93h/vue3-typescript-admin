@@ -11,9 +11,16 @@ export function login(data: ParamsType) {
   })
 }
 
-export function getUserInfo() {
+export function logout() {
   return request({
     method: 'post',
-    url: 'getUserInfo'
+    url: 'logout'
+  })
+}
+
+export function getUserInfo() {
+  return request({
+    method: 'get',
+    url: 'getInfo'
   })
 }
