@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="tool-bar flex-row-center-between">
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <el-avatar class="pointer" shape="square" :src="avatar"></el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
@@ -29,6 +29,7 @@
 <script>
 import Avatar from '@/assets/logo.png'
 import { logout } from '@/api/user'
+import { mapActions } from 'vuex'
 
 export default {
   data() {
@@ -37,9 +38,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', [
+      'clearState'
+    ]),
     handleOut() {
       logout().then(() => {
-        console.log('1111111')
+        this.$alert('确定退出当前用户吗？', '退出提示', {
+          type: 'warning'
+        }).then(() => {
+          this.clearState()
+          this.$router.replace('/login')
+        })
       })
     }
   }

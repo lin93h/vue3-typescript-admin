@@ -1,5 +1,5 @@
-import { MutationTree, ActionTree } from 'vuex'
-import { getToken } from '@/utils/cookie'
+import { MutationTree, ActionTree, GetterTree } from 'vuex'
+import { getCookieToken, setCookieToken, removeCookieToken } from '@/utils/cookie'
 import { getUserInfo } from '@/api/user'
 
 export interface UserState {
@@ -9,16 +9,28 @@ export interface UserState {
 }
 
 const state: UserState = {
-  token: getToken(),
+  token: getCookieToken(),
   userInfo: null,
   roles: []
+}
+
+const getters: GetterTree<UserState, unknown> = {
+  token: state => {
+    return state.token
+  },
+  userInfo: state => {
+    return state.userInfo
+  },
+  roles: state => {
+    return state.roles
+  }
 }
 
 const mutations: MutationTree<UserState> = {
   setToken(state: UserState, token: string) {
     state.token = token
   },
-  getUser(state: UserState, userInfo: Record<string, unknown>) {
+  setUser(state: UserState, userInfo: Record<string, unknown>) {
     state.userInfo = userInfo
   },
   setRoles(state: UserState, roles: Array<string>) {
@@ -29,17 +41,22 @@ const mutations: MutationTree<UserState> = {
 const actions: ActionTree<UserState, unknown> = {
   // 设置token
   setToken({ commit }, token: string) {
+    setCookieToken(token)
     commit('setToken', token)
   },
   clearState({ commit }) {
+    removeCookieToken()
     commit('setToken', '')
+    commit('setUser', null)
+    commit('setRoles', [])
   },
   // 设置用户信息
   getUser({ commit }) {
-    getUserInfo().then(res => {
+    return getUserInfo().then(res => {
       const { user, roles } = res
-      commit('getUser', user)
+      commit('setUser', user)
       commit('setRoles', roles)
+      return res
     })
   }
 }
@@ -47,6 +64,7 @@ const actions: ActionTree<UserState, unknown> = {
 export default {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 }

@@ -1,6 +1,6 @@
 import axios, { ResponseType, AxiosResponse } from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getToken } from '@/utils/cookie'
+import store from '@/store'
 
 // 初始化拦截器
 const instance = axios.create({
@@ -10,8 +10,8 @@ const instance = axios.create({
 
 // 请求拦截器
 instance.interceptors.request.use((config) => {
-  if(getToken()) {
-    config.headers['Authorization'] = 'Bearer ' + getToken()
+  if(store.getters['user/token']) {
+    config.headers['Authorization'] = 'Bearer ' + store.getters['user/token']
   }
   return config
 }, (error) => {
@@ -24,7 +24,8 @@ instance.interceptors.response.use((response) => {
   if(request.responseType === 'blob') {
     return response
   }
-  if(data.code === 305) {
+  if(data.code === 401) {
+    store.dispatch('user/clearState')
     ElMessageBox.alert(data.msg, '提示', {
       type: 'warning',
       confirmButtonText: '重新登录',

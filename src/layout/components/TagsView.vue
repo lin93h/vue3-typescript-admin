@@ -1,23 +1,24 @@
 <template>
   <div class="tags-view-wrapper">
-    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel="handleScroll">
-      <div class="flex-row-center">
-        <div class="tag-item pointer">
-          <span class="txt">首页</span>
-          <i class="el-icon-close"></i>
-        </div>
-        <div class="tag-item">首页</div>
-        <div class="tag-item" v-for="n in 30" :key="n">首页</div>
+    <!-- <el-scrollbar :vertical="false" class="scroll-container">
+          </el-scrollbar> -->
+    <div class="tags-view-inner" ref="scrollContainer" @wheel="handleScroll">
+      <div class="tag-item pointer">
+        <span class="txt">首页</span>
+        <i class="el-icon-close"></i>
       </div>
-    </el-scrollbar>
+      <div class="tag-item">首页</div>
+      <div class="tag-item" v-for="n in 30" :key="n">首页</div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    handleScroll() {
-      console.log('滚动111111')
+    handleScroll(event) {
+      // console.log('滚动111111', event.deltaY)
+      this.$refs['scrollContainer'].scrollLeft += (event.deltaY / 2)
     }
   }
 }
@@ -27,8 +28,7 @@ export default {
 .scroll-container {
   white-space: nowrap;
   position: relative;
-  overflow-y: hidden;
-  overflow-x: scroll;
+  // overflow-y: scroll;
   width: 100%;
   .el-scrollbar__bar {
     bottom: 0px;
@@ -38,13 +38,16 @@ export default {
   }
 }
 .tags-view-wrapper {
-  // height: 40px;
-  // background: #fff;
-  // border-bottom: 1px solid #eee;
-  // box-sizing: border-box;
-  // padding: 0 10px;
-  // overflow-y: hidden;
-  // overflow-x: scroll;
+  .tags-view-inner {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 40px;
+    padding: 5px 0 0;
+    position: relative;
+  }
   .tag-item {
     flex-shrink: 0;
     font-size: 12px;
@@ -52,6 +55,12 @@ export default {
     margin-right: 5px;
     border: 1px solid #eee;
     border-radius: 2px;
+    &:first-child {
+      margin-left: 10px;
+    }
+    &:last-child {
+      margin-right: 10px;
+    }
   }
 }
 </style>

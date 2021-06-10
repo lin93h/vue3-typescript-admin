@@ -26,7 +26,7 @@ import { ElForm } from 'element-plus'
 import { defineComponent } from 'vue'
 import { captchaImage } from '@/api/common'
 import { login } from '@/api/user'
-import { setToken } from '@/utils/cookie'
+import { mapActions, mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'Login',
@@ -60,10 +60,21 @@ export default defineComponent({
       codeImg: ''
     }
   },
+  computed: {
+    ...mapGetters('user', [
+      'token',
+      'roles',
+      'userInfo'
+    ])
+  },
   created() {
     this.handleGetCode()
   },
   methods: {
+    ...mapActions('user', [
+      'setToken',
+      'getUser'
+    ]),
     // 获取验证码
     handleGetCode() {
       captchaImage().then((res) => {
@@ -80,8 +91,9 @@ export default defineComponent({
       loginFormRef.validate((valid) => {
         if(valid) {
           login(this.loginForm).then((res) => {
-            setToken(res.token)
-            this.$router.push('/dashboard')
+            this.setToken(res.token).then(() => {
+              this.$router.replace('/dashboard')
+            })
           }).catch(() => {
             this.handleGetCode()
           })

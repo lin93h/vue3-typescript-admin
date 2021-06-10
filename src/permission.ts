@@ -1,22 +1,33 @@
 import router from './router'
 import store from '@/store/index'
-import { GettersType } from '@/store/getters'
+import NProgress from 'nprogress'
 
 const whiteList: Array<string> = ['/login']
 
 router.beforeEach((to, from, next) => {
-  const getters = store.getters as GettersType
-  if(getters.token) {
-    if(getters.roles.length) {
-      next()
+  NProgress.start()
+  const token = store.getters['user/token']
+  const roles = store.getters['user/roles']
+  if(token) {
+    if(to.path === '/login') {
+      next({ path: '/' })
+      NProgress.done()
     } else {
-      store.dispatch('user/getUser').then(() => {
+      if(roles && roles.length) {
         next()
-      })
+      } else {
+        try {
+          store.dispatch('user/getUser').then(() => {
+            next({ ...to, replace: true })
+          })
+        } catch(error) {
+          console.log('【路由异常】', error)
+        }
+      }
     }
   } else {
     // 没有token
-    if (whiteList.indexOf(to.path) !== -1) {
+    if(whiteList.indexOf(to.path) !== -1) {
       // 在免登录白名单，直接进入
       next()
     } else {
