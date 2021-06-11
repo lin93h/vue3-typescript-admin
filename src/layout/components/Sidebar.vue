@@ -1,13 +1,13 @@
 <template>
   <div class="side-bar">
-    <el-menu :collapse="isCollapse">
+    <el-menu :collapse="isCollapse" :router="true">
       <el-submenu index="1">
         <template #title>
           <i class="el-icon-location"></i>
           <span>导航一</span>
         </template>
-        <el-menu-item index="1-1">选项1</el-menu-item>
-        <el-menu-item index="1-2">选项2</el-menu-item>
+        <el-menu-item index="/about">关于页面</el-menu-item>
+        <el-menu-item index="/home">个人中心</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template #title>
