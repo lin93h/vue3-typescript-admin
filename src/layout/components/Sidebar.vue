@@ -1,21 +1,14 @@
 <template>
   <div class="side-bar">
     <el-menu :collapse="isCollapse" :router="true">
-      <el-submenu index="1">
+      <el-submenu :index="route.path" v-for="route in routes" :key="route.path">
         <template #title>
           <i class="el-icon-location"></i>
-          <span>导航一</span>
+          <span>{{route.meta?.title}}</span>
         </template>
-        <el-menu-item index="/about">关于页面</el-menu-item>
-        <el-menu-item index="/home">个人中心</el-menu-item>
-      </el-submenu>
-      <el-submenu index="2">
-        <template #title>
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
+        <el-menu-item :index="route.path + child.path" v-for="child in route.children" :key="child.path">
+          <span>{{child.meta?.title}}{{route.path + child.path}}</span>
+        </el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -23,11 +16,17 @@
 </template>
 
 <script>
+import { asyncRoutes } from '@/router/index'
+
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      routes: asyncRoutes
     }
+  },
+  created() {
+    console.log('1111111', this.routes, this.$router.options.routes)
   }
 }
 </script>

@@ -78,7 +78,7 @@ export default defineComponent({
     // 获取验证码
     handleGetCode() {
       captchaImage().then((res) => {
-        this.codeImg = ('data:image/gif;base64,' + res.img) as string
+        this.codeImg = (res.img) as string
         this.loginForm.uuid = res.uuid
       }).catch((error) => {
         console.log(error)

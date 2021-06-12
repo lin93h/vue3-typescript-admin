@@ -22,22 +22,21 @@ const getters: GetterTree<TagsViewType, unknown> = {
 
 const mutations: MutationTree<TagsViewType> = {
   setTagsView(state, route: RouteLocationNormalized) {
-    if(!state.cacheViews.includes(route.fullPath)) {
+    if (!state.cacheViews.includes(route.fullPath || route.path)) {
       state.visibleViews.push(route)
-      state.cacheViews.push(route.fullPath)
+      state.cacheViews.push(route.fullPath || route.path)
     }
   },
   removeTagsView(state, route: RouteLocationNormalized) {
-    const index = state.cacheViews.indexOf(route.fullPath)
+    const index = state.cacheViews.indexOf(route.fullPath || route.path)
     state.visibleViews.map((item, i) => {
-      if(index === i) {
+      if (index === i) {
         return null
       }
       return item
     })
     state.cacheViews.splice(index, 1)
     state.visibleViews.splice(index, 1)
-    // console.log('444444444', index, state.cacheViews, state.visibleViews)
   }
 }
 

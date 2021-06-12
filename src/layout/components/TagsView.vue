@@ -1,12 +1,9 @@
 <template>
   <div class="tags-view-wrapper">
     <div class="tags-view-inner" ref="scrollContainer" @wheel="handleScroll">
-      <div class="tag-item pointer">
-        <span class="txt">首页</span>
-      </div>
-      <router-link class="tag-item" v-for="tag in visibleViews" :key="tag" :to="tag.fullPath">
+      <router-link class="tag-item" active-class="tag-active" v-for="(tag, index) in visibleViews" :key="index" :to="tag.fullPath || tag.path">
         <span>{{tag.meta.title}}</span>
-        <i class="el-icon-close" @click="handleRemove(tag)"></i>
+        <i class="el-icon-close" @click.prevent="handleRemove(tag)" v-if="!tag.meta?.affix"></i>
       </router-link>
     </div>
   </div>
@@ -20,10 +17,30 @@ export default {
     ...mapGetters('tagsView', ['visibleViews', 'cacheViews'])
   },
   created() {
+    const routes = this.$router.options.routes
+    routes.map(route => {
+      if(route.children && route.children.length) {
+        const path = route.path
+        route.children.map(child => {
+          if(child.meta?.affix) {
+            this.setTagsView({
+              ...child,
+              fullPath: path + child.path
+            })
+          }
+          return child
+        })
+      } else {
+        if(route.meta?.affix) {
+          this.setTagsView(route)
+        }
+      }
+      return route
+    })
     this.setTagsView(this.$route)
   },
   watch: {
-    $route: function(val) {
+    $route: function (val) {
       this.setTagsView(val)
     }
   },
@@ -36,8 +53,7 @@ export default {
 
     // 移除标签
     handleRemove(route) {
-      this.removeTagsView(route).then(res => {
-        console.log('11111111', res, this.visibleViews)
+      this.removeTagsView(route).then(() => {
         this.$router.replace(this.cacheViews[this.cacheViews.length - 1])
       })
     }
@@ -46,18 +62,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.scroll-container {
-  white-space: nowrap;
-  position: relative;
-  // overflow-y: scroll;
-  width: 100%;
-  .el-scrollbar__bar {
-    bottom: 0px;
-  }
-  .el-scrollbar__wrap {
-    height: 49px;
-  }
-}
 .tags-view-wrapper {
   .tags-view-inner {
     display: flex;
@@ -69,6 +73,10 @@ export default {
     padding: 5px 0 0;
     position: relative;
   }
+  .tag-active {
+    background: green;
+    color: #fff;
+  }
   .tag-item {
     flex-shrink: 0;
     font-size: 12px;
@@ -76,11 +84,22 @@ export default {
     margin-right: 5px;
     border: 1px solid #eee;
     border-radius: 2px;
+    transition: all 0.3s;
     &:first-child {
       margin-left: 10px;
     }
     &:last-child {
       margin-right: 10px;
+    }
+    .el-icon-close {
+      transition: all 0.3s;
+      font-weight: bold;
+      border-radius: 50%;
+      margin-left: 5px;
+      &:hover {
+        color: #fff;
+        background: #999;
+      }
     }
   }
 }
