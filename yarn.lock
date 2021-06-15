@@ -908,7 +908,6 @@
 "@types/nprogress@^0.2.0":
   version "0.2.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
-  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -5422,9 +5421,9 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
-nprogress@^1.0.0-1:
-  version "1.0.0-1"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/nprogress/-/nprogress-1.0.0-1.tgz#dd4cce2b951f9359028facd6c51cc9c49ecfa1a2"
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
 
 nth-check@^1.0.2:
   version "1.0.2"

@@ -1,6 +1,10 @@
 import router, { asyncRoutes } from '@/router/index'
 import store from '@/store/index'
 import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// 移除nprogress右侧进度环
+NProgress.configure({ showSpinner: false })
 
 const whiteList: Array<string> = ['/login']
 
@@ -8,12 +12,11 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   const token = store.getters['user/token']
   const roles = store.getters['user/roles']
-  if(token) {
-    if(to.path === '/login') {
+  if (token) {
+    if (to.path === '/login') {
       next({ path: '/' })
-      // NProgress.done()
     } else {
-      if(roles && roles.length) {
+      if (roles && roles.length) {
         next()
       } else {
         try {
@@ -22,21 +25,25 @@ router.beforeEach((to, from, next) => {
               router.addRoute(route)
               return route
             })
-            console.log('zzzzzzzzz', router.getRoutes())
             next({ ...to, replace: true })
           })
-        } catch(error) {
-          console.log('【路由异常】', error)
+        } catch (error) {
+          // console.log('【路由异常】', error)
         }
       }
     }
   } else {
     // 没有token
-    if(whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.path) !== -1) {
       // 在免登录白名单，直接进入
       next()
     } else {
       next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
     }
   }
+})
+
+router.afterEach((to) => {
+  document.title = to.meta.title
+  NProgress.done()
 })
