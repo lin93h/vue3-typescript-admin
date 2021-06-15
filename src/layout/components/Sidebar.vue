@@ -6,13 +6,12 @@
           <i class="el-icon-location"></i>
           <span>{{route.meta?.title}}</span>
         </template>
-        <el-menu-item :index="route.path + child.path" v-for="child in route.children" :key="child.path">
+        <el-menu-item :index="route.path + '/' + child.path" v-for="child in route.children" :key="child.path">
           <span>{{child.meta?.title}}{{route.path + child.path}}</span>
         </el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
-
 </template>
 
 <script>

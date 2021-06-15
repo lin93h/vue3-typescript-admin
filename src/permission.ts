@@ -1,4 +1,4 @@
-import router from './router'
+import router, { asyncRoutes } from '@/router/index'
 import store from '@/store/index'
 import NProgress from 'nprogress'
 
@@ -11,13 +11,18 @@ router.beforeEach((to, from, next) => {
   if(token) {
     if(to.path === '/login') {
       next({ path: '/' })
-      NProgress.done()
+      // NProgress.done()
     } else {
       if(roles && roles.length) {
         next()
       } else {
         try {
           store.dispatch('user/getUser').then(() => {
+            asyncRoutes.map(route => {
+              router.addRoute(route)
+              return route
+            })
+            console.log('zzzzzzzzz', router.getRoutes())
             next({ ...to, replace: true })
           })
         } catch(error) {
