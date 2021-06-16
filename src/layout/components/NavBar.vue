@@ -2,7 +2,7 @@
   <div class="nav-bar-wrapper flex-row-center-between">
     <div class="section flex-row-center-between">
       <div class="sidebar-switch">
-        <i class="switch pointer el-icon-s-fold"></i>
+        <i class="switch pointer el-icon-s-fold" @click="setSidebarStatus"></i>
       </div>
       <div class="crumbs-nav">
         <el-breadcrumb separator="/">
@@ -40,6 +40,9 @@ export default {
   methods: {
     ...mapActions('user', [
       'clearState'
+    ]),
+    ...mapActions('app', [
+      'setSidebarStatus'
     ]),
     handleOut() {
       logout().then(() => {

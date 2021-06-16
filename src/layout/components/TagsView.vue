@@ -20,12 +20,11 @@ export default {
     const routes = this.$router.options.routes
     routes.map(route => {
       if(route.children && route.children.length) {
-        const path = route.path
         route.children.map(child => {
           if(child.meta?.affix) {
             this.setTagsView({
               ...child,
-              fullPath: path + child.path
+              fullPath: route.path + child.path
             })
           }
           return child

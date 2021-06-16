@@ -1,8 +1,8 @@
 <template>
-  <div class="layout-wrapper flex-row">
+  <div class="layout-wrapper">
     <sidebar></sidebar>
-    <div class="main-container flex-column">
-      <div class="fixed-header flex-column">
+    <div class="main-container">
+      <div class="fixed-header">
         <nav-bar></nav-bar>
         <tags-view></tags-view>
       </div>
@@ -29,12 +29,24 @@ export default {
 
 <style lang="scss">
 .layout-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
   position: relative;
   width: 100%;
   height: 100%;
   .main-container {
     flex-grow: 1;
-    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+    .fixed-header {
+      border-bottom: 1px solid #eee;
+    }
+    .app-main {
+      box-sizing: border-box;
+      flex-grow: 1;
+      overflow-y: scroll;
+      background: #fafafa;
+    }
   }
 }
 </style>

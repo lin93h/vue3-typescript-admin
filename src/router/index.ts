@@ -44,7 +44,8 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { title: '广告', affix: false }
       }
     ]
-  }, {
+  },
+  {
     path: '/personal',
     name: 'personal',
     component: Layout,
@@ -57,11 +58,12 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: { title: '消息', affix: false }
       }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
+    meta: { hidden: true }
   }
-  // {
-  //   path: '/:pathMatch(.*)*',
-  //   redirect: '/404'
-  // }
 ]
 
 const router: Router = createRouter({

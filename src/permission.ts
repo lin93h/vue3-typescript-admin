@@ -2,10 +2,12 @@ import router, { asyncRoutes } from '@/router/index'
 import store from '@/store/index'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import defaultSettings from './settings'
 
 // 移除nprogress右侧进度环
 NProgress.configure({ showSpinner: false })
 
+// 白名单
 const whiteList: Array<string> = ['/login']
 
 router.beforeEach((to, from, next) => {
@@ -44,6 +46,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title
+  // 设置页面title
+  document.title = to.meta.title + ' - ' + defaultSettings.title
   NProgress.done()
 })

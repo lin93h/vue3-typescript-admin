@@ -1,4 +1,5 @@
 @import './atom.scss';
+@import './element-ui.scss';
 
 html {
   height: 100%;
@@ -52,4 +53,11 @@ div:focus {
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: #c3c3c3;
+}
+
+.page-container {
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 10px;
+  background-color: #fff;
 }
