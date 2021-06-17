@@ -5,12 +5,7 @@
         <i class="switch pointer el-icon-s-fold" @click="setSidebarStatus"></i>
       </div>
       <div class="crumbs-nav">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-        </el-breadcrumb>
+        <breadcrumb></breadcrumb>
       </div>
     </div>
     <div class="tool-bar flex-row-center-between">
@@ -27,11 +22,15 @@
 </template>
 
 <script>
+import Breadcrumb from '@/layout/components/Breadcrumb.vue'
 import Avatar from '@/assets/logo.png'
 import { logout } from '@/api/user'
 import { mapActions } from 'vuex'
 
 export default {
+  components: {
+    Breadcrumb
+  },
   data() {
     return {
       avatar: Avatar

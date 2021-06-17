@@ -17,7 +17,7 @@ export default {
     ...mapGetters('tagsView', ['visibleViews', 'cacheViews'])
   },
   created() {
-    const routes = this.$router.options.routes
+    const routes = this.$router.getRoutes()
     routes.map(route => {
       if(route.children && route.children.length) {
         route.children.map(child => {

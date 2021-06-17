@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: () => import(/* webpackChunkName: "Login" */ '@/views/login/index.vue'),
-    meta: { title: '登录' }
+    meta: { title: '登录', hidden: true }
   },
   {
     path: '/',
@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Dashboard',
         path: 'dashboard',
         component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
-        meta: { title: '首页', affix: true }
+        meta: { title: '首页', affix: true, icon: 'el-icon-s-home' }
       }
     ]
   },
@@ -35,6 +35,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
     path: '/about',
     name: 'About',
     component: Layout,
+    redirect: '/about/adv',
     meta: { title: '关于' },
     children: [
       {

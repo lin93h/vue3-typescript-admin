@@ -3,35 +3,49 @@
     <el-menu :default-active="activeRoute" :collapse="sidebarCollapse" :router="true" :collapse-transition="false" :background-color="variables.menuBg"
              :text-color="variables.menuText" :unique-opened="true" :active-text-color="variables.menuActiveText">
       <template v-for="route in routes" :key="route.path">
-        <el-submenu :index="route.path" v-if="!route.meta.hidden">
-          <template #title>
-            <i class="icon el-icon-location"></i>
+        <template v-if="route.children && route.children.length">
+          <el-submenu :index="route.path" v-if="!route.meta.hidden">
+            <template #title>
+              <i class="icon" :class="route.meta.icon" v-if="route.meta.icon"></i>
+              <span>{{route.meta?.title}}</span>
+            </template>
+            <template v-for="child in route.children" :key="child.path">
+              <el-menu-item :index="route.path + '/' + child.path" v-if="!child.meta.hidden">
+                <span>{{child.meta?.title}}</span>
+              </el-menu-item>
+            </template>
+          </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item :index="route.path" v-if="!route.meta.hidden">
+            <i class="icon" :class="route.meta.icon" v-if="route.meta.icon"></i>
             <span>{{route.meta?.title}}</span>
-          </template>
-          <template v-for="child in route.children" :key="child.path">
-            <el-menu-item :index="route.path + '/' + child.path" v-if="!child.meta.hidden">
-              <span>{{child.meta?.title}}{{route.path + child.path}}</span>
-            </el-menu-item>
-          </template>
-        </el-submenu>
+          </el-menu-item>
+        </template>
       </template>
     </el-menu>
   </div>
 </template>
 
-<script>
-import { asyncRoutes } from '@/router/index'
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { mapGetters } from 'vuex'
 import variables from '@/assets/styles/variables.scss'
+import { RouteRecordRaw } from 'vue-router'
+import { asyncRoutes } from '@/router'
 
-export default {
+interface DataType {
+  activeRoute: string
+  routes: RouteRecordRaw[]
+}
+
+export default defineComponent({
   data() {
     return {
       variables,
-      isCollapse: false,
       activeRoute: '',
-      routes: asyncRoutes
-    }
+      routes: []
+    } as DataType
   },
   computed: {
     ...mapGetters('app', [
@@ -39,10 +53,17 @@ export default {
     ])
   },
   created() {
-    // console.log('1111111', this.$router.getRoutes())
+    const routes = this.$router.getRoutes()
+    const dashboard = routes.filter(route => ((route?.name || '') as string).toLocaleLowerCase() === 'dashboard') as RouteRecordRaw[]
+    this.routes = dashboard.concat(asyncRoutes)
     this.activeRoute = this.$route.path
+  },
+  watch: {
+    $route: function(value) {
+      this.activeRoute = value.path
+    }
   }
-}
+})
 </script>
 
 <style lang="scss">
@@ -61,7 +82,7 @@ export default {
     margin-right: 5px;
   }
   .is-active > .el-submenu__title {
-    color: $subMenuActiveText!important;
+    color: $subMenuActiveText !important;
     .icon {
       color: $subMenuActiveText;
     }
