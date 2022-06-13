@@ -7,12 +7,23 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import HelloWorld from '@/components/HelloWorld.vue'
 
 import { useDark, useToggle } from '@vueuse/core'
+import { login } from '@/api/common'
 
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
+}
+
+const handleLogin = () => {
+  let params = {
+    user: '',
+    password: ''
+  }
+  login(params).then(res => {
+    console.log('1111111111', res)
+  })
 }
 
 const isDark = useDark()
@@ -32,7 +43,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   <el-config-provider :locale="locale">
     <el-container class="app-container">
       <el-aside>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu :default-active="activeIndex" class="el-menu-demo" @select="handleSelect">
           <el-menu-item index="1">Processing Center</el-menu-item>
           <el-sub-menu index="2">
             <template #title>Workspace</template>
@@ -58,6 +69,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
                 <AddLocation />
               </el-icon>
               <el-button @click="toggleDark()">{{ isDark ? 'Dark' : 'Light' }}</el-button>
+              <el-button @click="handleLogin">登录</el-button>
             </div>
           </el-header>
           <el-main>
