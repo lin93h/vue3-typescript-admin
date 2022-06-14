@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import { ElConfigProvider } from 'element-plus'
+import { ElConfigProvider, ElMessageBox } from 'element-plus'
 
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import HelloWorld from '@/components/HelloWorld.vue'
@@ -17,13 +17,17 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 
 const handleLogin = () => {
+  ElMessageBox.alert('1111', 'ttt', {
+    type: 'warning',
+    callback: () => {}
+  })
   let params = {
     user: '',
     password: ''
   }
-  login(params).then(res => {
-    console.log('1111111111', res)
-  })
+  // login(params).then(res => {
+  //   console.log('1111111111', res)
+  // })
 }
 
 const isDark = useDark()
@@ -79,11 +83,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
           </el-main>
         </el-container>
       </el-main>
-
-
     </el-container>
   </el-config-provider>
-
 </template>
 
 <style lang="scss">
