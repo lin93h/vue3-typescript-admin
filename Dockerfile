@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
-FROM node:16.14.2-alpine
+FROM node:16.14.2
 WORKDIR /app
-COPY . .
+COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
+COPY . .
 CMD npm run dev
-EXPOSE 3000
