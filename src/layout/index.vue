@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
-import { ElConfigProvider, ElMessageBox } from 'element-plus'
+import { ref } from "vue"
+import { RouterLink, RouterView } from "vue-router"
+import { ElConfigProvider, ElMessageBox } from "element-plus"
 
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import { useDark, useToggle } from '@vueuse/core'
-import { login } from '@/api/common'
+import zhCn from "element-plus/lib/locale/lang/zh-cn"
+import { useDark, useToggle } from "@vueuse/core"
+import { login } from "@/api/common"
 
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -16,11 +16,11 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 const handleLogin = () => {
   let params = {
-    user: '',
-    password: ''
+    user: "",
+    password: "",
   }
-  login(params).then(res => {
-    console.log('1111111111', res)
+  login(params).then((res) => {
+    console.log("1111111111", res)
   })
 }
 
@@ -29,12 +29,11 @@ const toggleDark = useToggle(isDark)
 
 let locale = ref(zhCn)
 
-const activeIndex = ref('1')
+const activeIndex = ref("1")
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
-
 </script>
 
 <template>
@@ -62,11 +61,14 @@ const handleSelect = (key: string, keyPath: string[]) => {
       <el-main>
         <el-container>
           <el-header>
-            <div class="header-con">header
+            <div class="header-con">
+              header
               <el-icon>
                 <AddLocation />
               </el-icon>
-              <el-button @click="toggleDark()">{{ isDark ? 'Dark' : 'Light' }}</el-button>
+              <el-button @click="toggleDark()">{{
+                  isDark ? "Dark" : "Light"
+              }}</el-button>
               <el-button @click="handleLogin">登录</el-button>
             </div>
           </el-header>
@@ -82,7 +84,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 </template>
 
 <style lang="scss">
-@import '@/assets/base.css';
+@import "@/assets/base.css";
 
 #app {
   height: 100vh;
