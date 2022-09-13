@@ -8,6 +8,7 @@ import 'element-plus/dist/index.css'
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import 'element-plus/theme-chalk/dark/css-vars.css'
 
+import '@/assets/style/page.scss'
 import App from './App.vue'
 import router from './router'
 
