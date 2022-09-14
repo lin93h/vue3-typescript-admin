@@ -4,22 +4,44 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
+import type { Ref } from 'vue'
 import { RouterLink, RouterView, useRoute } from "vue-router"
 import { ElConfigProvider, ElMessageBox } from "element-plus"
-import { Fold, Expand, UserFilled, ArrowDown, Location } from "@element-plus/icons-vue"
+import { Fold, Expand, UserFilled, ArrowDown } from "@element-plus/icons-vue"
 
 import zhCn from "element-plus/lib/locale/lang/zh-cn"
 import { useDark, useToggle } from "@vueuse/core"
 import { login } from "@/api/common"
+import dynamicRoute from '@/router/dynamic'
+import MenuItem from '@/layout/menu/menuItem.vue'
+import SubMenu from '@/layout/menu/subMenu.vue'
+import logo from '@/assets/logo.svg'
 
 const route = useRoute()
 const avatarUrl = ref("")
 const isCollapse = ref(false)
+const breadcrumbData = ref<string[]>([])
+const activeIndex = ref("")
+
+watch(route, (newRoute) => {
+  handleCurRoute()
+})
 
 onMounted(() => {
-  console.log('aaaaaaa', route)
+  activeIndex.value = route.path
+  handleCurRoute()
 })
+
+const handleCurRoute = () => {
+  const list = route.matched.map(item => {
+    if (typeof item.meta.title === 'string' && item.meta.title) {
+      return item.meta.title
+    }
+    return ''
+  })
+  breadcrumbData.value = list.filter(item => item)
+}
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
@@ -42,7 +64,7 @@ const toggleDark = useToggle(isDark)
 
 let locale = ref(zhCn)
 
-const activeIndex = ref("1")
+
 
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -52,34 +74,18 @@ const handleSelect = (key: string, keyPath: string[]) => {
 <template>
   <el-config-provider :locale="locale">
     <el-container class="app-container">
-      <el-aside :width="isCollapse ? '64px' : '220px'">
-        <el-menu
-          :default-active="activeIndex"
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          @select="handleSelect"
-        >
-          <el-menu-item index="1">
-            <el-icon><Location></Location></el-icon>
-            <template #title>Processing Center</template>
-          </el-menu-item>
-          <el-sub-menu index="2">
-            <template #title>
-              <el-icon><Location /></el-icon>
-              <span>Processing Center</span>
-            </template>
-            <el-menu-item index="2-1">item one</el-menu-item>
-            <el-menu-item index="2-2">item two</el-menu-item>
-            <el-menu-item index="2-3">item three</el-menu-item>
-            <el-sub-menu index="2-4">
-              <template #title>item four</template>
-              <el-menu-item index="2-4-1">item one</el-menu-item>
-              <el-menu-item index="2-4-2">item two</el-menu-item>
-              <el-menu-item index="2-4-3">item three</el-menu-item>
-            </el-sub-menu>
-          </el-sub-menu>
-          <el-menu-item index="3" disabled>Info</el-menu-item>
-          <el-menu-item index="4">Orders</el-menu-item>
+      <el-aside class="layout-aside" :width="isCollapse ? '64px' : '220px'">
+        <div class="aside-header" style="background: #545c64">
+          <img class="logo" :src="logo" alt="">
+          <span class="app-name" v-if="!isCollapse">名称</span>
+        </div>
+        <el-menu router :default-active="activeIndex" :collapse="isCollapse" :collapse-transition="false"
+          @select="handleSelect" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff">
+          <template v-for="item of dynamicRoute">
+            <MenuItem v-if="!item.children?.length" :route="item">
+            </MenuItem>
+            <SubMenu v-else :route="item"></SubMenu>
+          </template>
         </el-menu>
       </el-aside>
       <el-main class="app-layout-main">
@@ -91,14 +97,15 @@ const handleSelect = (key: string, keyPath: string[]) => {
                 <Fold v-else @click="isCollapse = true" />
               </el-icon>
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item>promotion list</el-breadcrumb-item>
-                <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
+                <el-breadcrumb-item v-for="item of breadcrumbData">{{ item }}</el-breadcrumb-item>
               </el-breadcrumb>
               <div class="user-bar">
                 <el-dropdown>
                   <span class="avatar-box">
                     <el-avatar :size="35" :src="avatarUrl">
-                      <el-icon><UserFilled /></el-icon>
+                      <el-icon>
+                        <UserFilled />
+                      </el-icon>
                     </el-avatar>
                     {{ "用户名" }}
                     <el-icon class="el-icon--right">
@@ -132,43 +139,71 @@ const handleSelect = (key: string, keyPath: string[]) => {
 <style lang="scss">
 @import "@/assets/base.css";
 
-#app {
+.app-container {
   height: 100vh;
 
-  .el-container {
-    height: 100%;
+  .layout-aside {
+    display: flex;
+    flex-flow: column nowrap;
+
+    .aside-header {
+      height: 80px;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .logo {
+      width: 36px;
+    }
+
+    .app-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .el-menu {
+      flex-grow: 1;
+    }
   }
+
   .el-header {
     background-color: #fff;
+
     .header-con {
       height: 100%;
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
+
       .fold-expand {
         font-size: 24px;
         cursor: pointer;
         margin-right: 20px;
       }
+
       .user-bar {
         flex-grow: 1;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-end;
+
         .avatar-box {
           cursor: pointer;
         }
       }
     }
   }
+
   .app-layout-main {
     padding: 0;
     border: none;
     background-color: #f0f2f5;
-  }
-  .el-aside {
-    border: 1px solid #eee;
   }
 }
 </style>
