@@ -1,7 +1,20 @@
+<script lang="ts">
+export default {
+  name: "login",
+}
+</script>
+
 <script setup lang="ts">
+import { useUserStore } from "@/stores/user"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
+const useUser = useUserStore()
+
 const handleLogin = () => {
-  console.log("11111");
-};
+  useUser.setToken("9527")
+  router.push({ path: "/dashborad" })
+}
 </script>
 
 <template>
