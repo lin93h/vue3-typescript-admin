@@ -1,11 +1,10 @@
-<script lang='ts' setup>
-import type { RouteRecordRaw } from 'vue-router';
-import SubMenu from './subMenu.vue'
+<script lang="ts" setup>
+import type { RouteRecordRaw } from "vue-router"
+import SubMenu from "./subMenu.vue"
 
 const props = defineProps<{
   route: RouteRecordRaw
 }>()
-
 </script>
 
 <template>
@@ -16,7 +15,7 @@ const props = defineProps<{
       </el-icon>
       <span>{{ props.route.meta?.title }}</span>
     </template>
-    <template v-for="item of props.route.children">
+    <template v-for="(item, index) of props.route.children" :key="index">
       <el-menu-item v-if="!item.children?.length" :index="item.path">
         <el-icon v-if="item.meta?.icon">
           <component :is="item.meta.icon" />
@@ -28,6 +27,4 @@ const props = defineProps<{
   </el-sub-menu>
 </template>
 
-<style lang='scss'>
-
-</style>
+<style lang="scss"></style>

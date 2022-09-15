@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue"
-import type { Ref } from 'vue'
+import type { Ref } from "vue"
 import { RouterLink, RouterView, useRoute } from "vue-router"
 import { ElConfigProvider, ElMessageBox } from "element-plus"
 import { Fold, Expand, UserFilled, ArrowDown } from "@element-plus/icons-vue"
@@ -13,10 +13,10 @@ import { Fold, Expand, UserFilled, ArrowDown } from "@element-plus/icons-vue"
 import zhCn from "element-plus/lib/locale/lang/zh-cn"
 import { useDark, useToggle } from "@vueuse/core"
 import { login } from "@/api/common"
-import dynamicRoute from '@/router/dynamic'
-import MenuItem from '@/layout/menu/menuItem.vue'
-import SubMenu from '@/layout/menu/subMenu.vue'
-import logo from '@/assets/logo.svg'
+import dynamicRoute from "@/router/dynamic"
+import MenuItem from "@/layout/menu/menuItem.vue"
+import SubMenu from "@/layout/menu/subMenu.vue"
+import logo from "@/assets/logo.svg"
 
 const route = useRoute()
 const avatarUrl = ref("")
@@ -34,13 +34,13 @@ onMounted(() => {
 })
 
 const handleCurRoute = () => {
-  const list = route.matched.map(item => {
-    if (typeof item.meta.title === 'string' && item.meta.title) {
+  const list = route.matched.map((item) => {
+    if (typeof item.meta.title === "string" && item.meta.title) {
       return item.meta.title
     }
-    return ''
+    return ""
   })
-  breadcrumbData.value = list.filter(item => item)
+  breadcrumbData.value = list.filter((item) => item)
 }
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -52,7 +52,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 const handleLogin = () => {
   let params = {
     user: "",
-    password: '',
+    password: "",
   }
   login(params).then((res) => {
     console.log("1111111111", res)
@@ -64,8 +64,6 @@ const toggleDark = useToggle(isDark)
 
 let locale = ref(zhCn)
 
-
-
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
@@ -76,14 +74,21 @@ const handleSelect = (key: string, keyPath: string[]) => {
     <el-container class="app-container">
       <el-aside class="layout-aside" :width="isCollapse ? '64px' : '220px'">
         <div class="aside-header" style="background: #545c64">
-          <img class="logo" :src="logo" alt="">
+          <img class="logo" :src="logo" alt="" />
           <span class="app-name" v-if="!isCollapse">名称</span>
         </div>
-        <el-menu router :default-active="activeIndex" :collapse="isCollapse" :collapse-transition="false"
-          @select="handleSelect" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff">
-          <template v-for="item of dynamicRoute">
-            <MenuItem v-if="!item.children?.length" :route="item">
-            </MenuItem>
+        <el-menu
+          router
+          :default-active="activeIndex"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          @select="handleSelect"
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          text-color="#fff"
+        >
+          <template v-for="(item, index) of dynamicRoute" :key="index">
+            <MenuItem v-if="!item.children?.length" :route="item"> </MenuItem>
             <SubMenu v-else :route="item"></SubMenu>
           </template>
         </el-menu>
@@ -97,7 +102,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
                 <Fold v-else @click="isCollapse = true" />
               </el-icon>
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item v-for="item of breadcrumbData">{{ item }}</el-breadcrumb-item>
+                <el-breadcrumb-item v-for="(item, index) of breadcrumbData" :key="index">{{ item }}</el-breadcrumb-item>
               </el-breadcrumb>
               <div class="user-bar">
                 <el-dropdown>
@@ -114,11 +119,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
                   </span>
                   <template #dropdown>
                     <el-dropdown-menu>
-                      <el-dropdown-item>Action 1</el-dropdown-item>
-                      <el-dropdown-item>Action 2</el-dropdown-item>
-                      <el-dropdown-item>Action 3</el-dropdown-item>
-                      <el-dropdown-item disabled>Action 4</el-dropdown-item>
-                      <el-dropdown-item divided>Action 5</el-dropdown-item>
+                      <el-dropdown-item>个人信息</el-dropdown-item>
+                      <el-dropdown-item>退出</el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
