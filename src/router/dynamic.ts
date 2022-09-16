@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from "vue-router"
 
 const dynamic: RouteRecordRaw[] = [
   {
-    path: "/dashborad",
+    path: "dashborad",
     name: "dashboard",
     component: () => import("@/views/dashboard/index.vue"),
     meta: {

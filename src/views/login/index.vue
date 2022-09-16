@@ -5,7 +5,8 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from "@/pinia/user"
+import { nextTick } from "vue"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
@@ -13,7 +14,9 @@ const useUser = useUserStore()
 
 const handleLogin = () => {
   useUser.setToken("9527")
-  router.push({ path: "/dashborad" })
+  nextTick(() => {
+    router.push({ path: "/dashborad" })
+  })
 }
 </script>
 

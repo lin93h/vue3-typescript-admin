@@ -1,17 +1,22 @@
 import router from "@/router"
 import { useUserStore } from "@/pinia/user"
 
+const whiteList = ["login"]
+
 router.beforeEach((to, from, next) => {
-  console.log("11111", to, from)
   const useUser = useUserStore()
   const token = useUser.token
   if (token) {
-    if (to.name === "Login") {
+    if (to.name === "login") {
       next({ name: "dashboard" })
     } else {
       next()
     }
   } else {
-    next({ name: "login" })
+    if (whiteList.includes(to.name as string)) {
+      next()
+    } else {
+      next({ name: "login" })
+    }
   }
 })
