@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
+import router from "@/router/index"
 
 export const useUserStore = defineStore("user", () => {
   const token = ref(localStorage.getItem("token") || "")
@@ -9,8 +10,14 @@ export const useUserStore = defineStore("user", () => {
     token.value = value
   }
 
+  const signOut = () => {
+    setToken("")
+    router.push({ path: "/login" })
+  }
+
   return {
     token,
     setToken,
+    signOut,
   }
 })

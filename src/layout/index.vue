@@ -16,8 +16,11 @@ import { login } from "@/api/common"
 import dynamicRoute from "@/router/dynamic"
 import MenuItem from "@/layout/menu/menuItem.vue"
 import SubMenu from "@/layout/menu/subMenu.vue"
+import HistoryTabs from "@/layout/history/tabs.vue"
 import logo from "@/assets/logo.svg"
+import { useUserStore } from "@/pinia/user"
 
+const useUser = useUserStore()
 const route = useRoute()
 const avatarUrl = ref("")
 const isCollapse = ref(false)
@@ -41,6 +44,10 @@ const handleCurRoute = () => {
     return ""
   })
   breadcrumbData.value = list.filter((item) => item)
+}
+
+const handleLogOut = () => {
+  useUser.signOut()
 }
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -120,13 +127,16 @@ const handleSelect = (key: string, keyPath: string[]) => {
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item>个人信息</el-dropdown-item>
-                      <el-dropdown-item>退出</el-dropdown-item>
+                      <el-dropdown-item>
+                        <span @click="handleLogOut">退出</span>
+                      </el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
               </div>
             </div>
           </el-header>
+          <HistoryTabs></HistoryTabs>
           <el-main>
             <el-scrollbar height="100%">
               <RouterView></RouterView>
