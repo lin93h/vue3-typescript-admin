@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue"
+import { onMounted, ref, watch, watchEffect } from "vue"
 import type { TabPanelName } from "element-plus"
 import { useRoute } from "vue-router"
 import type { RouteLocationNormalizedLoaded } from "vue-router"
@@ -11,28 +11,41 @@ const editableTabsValue = ref("")
 const editableTabs = ref<RouteLocationNormalizedLoaded[]>([])
 let tabIndex = 2
 
-onMounted(() => {
-  const curRoute = _.cloneDeep(route)
-  editableTabsValue.value = curRoute.fullPath
-  editableTabs.value.push(curRoute)
-})
-
-watch(route, () => {
-  console.log(route)
-  const curRoute = _.cloneDeep(route)
-  editableTabsValue.value = curRoute.fullPath
+// onMounted(() => {
+//   const curRoute = _.cloneDeep(route)
+//   editableTabsValue.value = curRoute.fullPath
+//   editableTabs.value.push(curRoute)
+// })
+const handleSetRoute = () => {
+  const fullPath = route.fullPath
+  const title = route.meta.title
+  editableTabsValue.value = fullPath
   let count = 0
   for (const item of editableTabs.value) {
-    if (item.fullPath === route.fullPath) {
+    if (item.fullPath === fullPath) {
       break
     } else {
       count++
     }
   }
   if (editableTabs.value.length === count) {
-    editableTabs.value.push(curRoute)
+    editableTabs.value.push({
+      ...route,
+      fullPath,
+      meta: {
+        title,
+      },
+    })
   }
-})
+}
+
+watch(
+  () => route.fullPath,
+  (to) => {
+    handleSetRoute()
+  },
+  { immediate: true }
+)
 
 const removeTab = (targetName: TabPanelName) => {
   // const tabs = editableTabs.value
