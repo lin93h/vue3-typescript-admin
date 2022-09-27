@@ -13,7 +13,7 @@ const dynamic: RouteRecordRaw[] = [
   {
     path: "/home2",
     name: "Dashboard2",
-    component: () => import("@/views/dashboard/index.vue"),
+    component: () => import("@/views/dashboard/index2.vue"),
     meta: {
       title: "首页2",
       icon: "Folder",
@@ -22,7 +22,7 @@ const dynamic: RouteRecordRaw[] = [
       {
         path: "/home21",
         name: "Dashboard21",
-        component: () => import("@/views/dashboard/index.vue"),
+        component: () => import("@/views/dashboard/index3.vue"),
         meta: {
           title: "首页21",
           icon: "Folder",
@@ -33,7 +33,7 @@ const dynamic: RouteRecordRaw[] = [
   {
     path: "/home3",
     name: "Dashboard3",
-    component: () => import("@/views/dashboard/index.vue"),
+    component: () => import("@/views/dashboard/index3.vue"),
     meta: {
       title: "首页3",
       icon: "Folder",

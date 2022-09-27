@@ -2,7 +2,7 @@
 
 <template>
   <div class="app-page dashboard-wrapper">
-    1
+    3
     <el-skeleton />
   </div>
 </template>
