@@ -1,10 +1,7 @@
 import request from "@/utils/request"
+import type { DataType } from "@/utils/request"
 
-interface LoginParams {
-  user: string
-  password: string
-}
-export function login(data: LoginParams) {
+export function login(data: DataType) {
   return request({
     url: "/api/login",
     method: "post",

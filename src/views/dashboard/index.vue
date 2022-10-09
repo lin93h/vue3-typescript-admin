@@ -1,3 +1,9 @@
+<script>
+export default {
+  name: "dashboard",
+}
+</script>
+
 <script lang="ts" setup></script>
 
 <template>
