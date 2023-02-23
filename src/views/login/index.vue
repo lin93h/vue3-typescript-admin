@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import { useUserStore } from "@/pinia/user"
 import { useRouter } from "vue-router"
-import { login } from "@/api/common"
+import { login, register } from "@/api/common"
 import { reactive, ref } from "vue"
 import type { FormInstance, FormRules } from "element-plus"
 
@@ -25,6 +25,17 @@ const rules = reactive<FormRules>({
   password: [{ required: true, trigger: "change", message: "请输入" }],
 })
 
+const visible = ref(false)
+const registerForm = ref({
+  account: "",
+  password: "",
+})
+const registerRules = reactive<FormRules>({
+  account: [{ required: true, trigger: "change", message: "请输入" }],
+  password: [{ required: true, trigger: "change", message: "请输入" }],
+})
+const registerRef = ref<FormInstance>()
+
 const handleLogin = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid, fields) => {
@@ -35,6 +46,21 @@ const handleLogin = (formEl: FormInstance | undefined) => {
       })
     }
   })
+}
+
+// 注册
+const handleRegister = () => {
+  registerRef.value?.validate((valid) => {
+    if (valid) {
+      register(registerForm.value).then(() => {
+        visible.value = false
+      })
+    }
+  })
+}
+
+const handleVisibleReg = () => {
+  visible.value = true
 }
 </script>
 
@@ -49,8 +75,22 @@ const handleLogin = (formEl: FormInstance | undefined) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleLogin(userFormRef)">登录</el-button>
+        <el-button type="warning" @click="handleVisibleReg">注册</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog v-model="visible" title="注册">
+      <el-form ref="registerRef" :model="registerForm" :rules="registerRules">
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="registerForm.account"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="registerForm.password"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="handleRegister">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 

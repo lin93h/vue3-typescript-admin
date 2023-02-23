@@ -1,5 +1,6 @@
 import axios from "axios"
-import { ElMessageBox } from "element-plus"
+import type { AxiosResponse } from "axios"
+import { ElMessage } from "element-plus"
 
 export interface DataType {
   [prop: string]: unknown
@@ -25,11 +26,22 @@ instance.interceptors.request.use(
   }
 )
 
-instance.interceptors.response.use(
-  (response) => {
-    console.log("响应拦截：", response)
+interface ResDataType {
+  code: number
+  msg: string
+  data: DataType
+}
 
-    return response
+instance.interceptors.response.use(
+  (response: AxiosResponse<ResDataType>) => {
+    console.log("响应拦截：", response)
+    const data = response.data
+    if (data.code === 200) {
+      return response.data
+    } else {
+      ElMessage.error(data.msg)
+      return Promise.reject(data)
+    }
   },
   (error) => {
     console.log("响应拦截ERROR:", error)
